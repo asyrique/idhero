@@ -23,7 +23,7 @@ var express    = require('express'),        // call express
     qs = require('querystring'),
     http = require('http'),
     twilio = require('twilio');
-var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 
 /*
@@ -67,8 +67,7 @@ router.get('/', function(req, res) {
 
 
 router.post('/', function(req, res) {
-    console.log('I am here');
-     var body = '';
+     var body = "";
      var cleanBody = "";
 
   req.on('data', function(data) {
@@ -91,7 +90,6 @@ function parseBody(textClump){
     var body = "";
     var indexStart = 0;
     var indexEnd = 0;
-    var cleanBody = "";
 
     for (var i = 0; i  <= text.length - 6; i++) {
         if(text.slice(i, i+5) == "&Body"){
@@ -107,12 +105,8 @@ function parseBody(textClump){
         }
     }
     body = text.slice(indexStart,indexEnd);
-    for ( i = 0; i <= body.length; i++) {
-        if(body[i] == "+"){
-            body[i] = ' ';
-        }
-    }
-    console.log(body);
+    cleanBody = body.split('+').join(' ');
+    console.log(cleanBody);
 }
 
 // START THE SERVER
