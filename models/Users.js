@@ -6,10 +6,6 @@ var schema = new mongoose.Schema(
     type: String,
     unique: true
   },
-  pin: {
-    type: Number,
-    select: false
-  },
   joined:{
       type: Date,
       default: Date.now
