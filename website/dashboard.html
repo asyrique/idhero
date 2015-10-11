@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IDHERO</title>
+  <script src="js/jquery.js"></script>
+    <script src="js/main.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+  
+  <div class="container">
+    
+    <div class="header">
+    
+
+<br><br><br>
+    </div>
+  <div class="cf"></div>
+    <div class="google-search">
+      
+      <center>
+      <img src="images/birdy.png" alt="birdy">
+      <form action="POST">
+          
+          <div class="search-bar">
+
+            <input type="text" placeholder="Enter Phone Number ### ### ## ##" name = "idSearch"> 
+          </div>
+
+          <div class="cf"></div>
+        
+        <input class="search" type="submit" id="getDATA" value="GET INFO">
+
+      
+      </form>
+      </center>
+    
+    </div>
+    
+    <footer>
+
+      <ul class="footer-left">
+    
+        <li><a class="name" href="#">IDHERO INC</a></li>
+
+
+      </ul>
+
+      <ul class="footer-right">
+
+        <li><a href="#">Privacy &amp; Terms</a></li>
+        <li><a href="#">Settings</a></li>
+
+      </ul>
+
+    </footer>
+
+  </div>
+  
+  <script type="text/javascript">
+  $('input[type=text]').focus(function(){
+    $('.mic').css('border-color', '#4285F4');
+  }).blur(function(){
+    $('.mic').css('border-color', '#DCDCDC');
+  });
+</script>
+
+</body>
+</html>
