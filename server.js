@@ -19,6 +19,7 @@ var express    = require('express'),        // call express
     //plans = require('./routes/plan'),
     //smsauth = require('./routes/twilio'),
     bodyParser = require('body-parser'),
+    cors       = require('cors'),
     qs = require('querystring'),
     http = require('http'),
     twilio = require('twilio');
@@ -58,7 +59,7 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();
 
 router.get('/', function(req, res) {
-    res.json({ message: 'APIv2' });
+    res.json({ message: 'APIv1' });
 });
 
 
@@ -95,7 +96,7 @@ function parseBody(textClump){
             indexStart = i + 6;
             break;
         }
-        
+
     }
     for ( i = indexStart; i < text.length; i++) {
         if (text[i] == '&'){
@@ -139,7 +140,7 @@ twilioClient.sendMessage({
         console.log(responseData.body); // outputs "word to your mother."
 
     }
-}); 
+});
 
 // SMS Auth
 router.post('/verify', smsauth.getcode);
@@ -178,10 +179,10 @@ app.post('/', function(request, response) {
     if (twilio.validateExpressRequest(request, config.twilio.key, {url: config.twilio.smsWebhook}) || config.disableTwilioSigCheck) {
         response.header('Content-Type', 'text/xml');
         var body = request.param('Body').trim();
-        
+
         // the number the vote it being sent to (this should match an Event)
         var to = request.param('To');
-        
+
         // the voter, use this to keep people from voting more than once
         var from = request.param('From');
 
@@ -207,9 +208,9 @@ app.post('/', function(request, response) {
                 response.send('<Response><Sms>Sorry, you are only allowed to vote once.</Sms></Response>');
             }
             else {
-                
+
                 var vote = parseInt(body,10);
-                    
+
                 events.saveVote(event, vote, from, function(err, res) {
                     if (err) {
                         response.send('<Response><Sms>We encountered an error saving your vote. Try again?</Sms></Response>');
