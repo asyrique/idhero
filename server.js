@@ -20,7 +20,7 @@ var express    = require('express'),        // call express
     //smsauth = require('./routes/twilio'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
-    qs = require('querystring'),
+    //qs = require('querystring'),
     http = require('http'),
     twilio = require('twilio');
     var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -68,7 +68,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
      var body = "";
-     var textInput;
+     var textInput = "";
 
   req.on('data', function(data) {
     body += data;
@@ -77,8 +77,14 @@ router.post('/', function(req, res) {
   req.on('end', function() {
     //Create TwiML response
     var twiml = new twilio.TwimlResponse();
+    
     textInput = parseBody(body);
-    //twiml.message('Thanks, your message of "' + body + '" was received!');
+    textInput = textInput.split();
+
+    if(textInput[0].toUpperString() == "REGISTER"){
+        console.log(textInput[0]);
+    }
+    twiml.message('Thanks, your message of "' + body + '" was received!');
 
    res.writeHead(200, {'Content-Type': 'text/xml'});
    res.end(twiml.toString());
@@ -106,7 +112,7 @@ function parseBody(textClump){
     }
     body = text.slice(indexStart,indexEnd);
     cleanBody = body.split('+').join(' ');
-    console.log(cleanBody);
+    return(cleanBody);
 }
 
 // START THE SERVER
