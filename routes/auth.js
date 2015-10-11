@@ -1,21 +1,101 @@
 var User = require('../models/users');
+var twilio = require('twilio');
+var util = require("../models/util");
+
 
 
 exports.auth = function(req, res, next){
-  response.header('Content-Type', 'text/xml');
+  res.header('Content-Type', 'text/xml');
+  var twiml = new twilio.TwimlResponse();
 
-  var body = request.param('Body').trim();
-  var from = req.param('From');
-  User.findOne({"phone":from}, function(err, user){
-    if (err && body == "REGISTER"){
-      req.user = new User();
-
-      req.user.phone = from;
-
+  User.findOne({"phone":req.body.From}, function(err, user){
+    if (user === null && req.body.Body.toUpperCase() == "REGISTER"){
+      user = new User();
+      req.action = {
+        verb: "register",
+        key: "register",
+        phone: req.body.From,
+        data: null
+      };
+      req.user = user;
       next();
+    }
+    else if(user === null){
+      console.log("User does not exist");
+      twiml.message("You've reached IDHero, one ID to rule them all. We see you don't have an account. Type REGISTER to join the revolution now.");
+      res.writeHead(200, {'Content-Type': 'text/xml'});
+      res.end(twiml.toString());
     }
     else{
       req.user = user;
+      req.action = {};
+      console.log(req.body.Body.split(' ')[0].toUpperCase());
+      switch (req.body.Body.split(' ')[0].toUpperCase()) {
+        case "HERO":
+          twiml.message(util.texts.hero1);
+          twiml.message(util.texts.hero2);
+          twiml.message(util.texts.hero3);
+          res.writeHead(200, {'Content-Type': 'text/xml'});
+          res.end(twiml.toString());
+          break;
+        case "NAME":
+          req.action = {
+            verb: "upsert",
+            key: "name",
+            phone: req.body.From,
+            data: req.body.Body.substring(5,req.body.Body.length)
+          };
+          next();
+          break;
+        case "DOB":
+          twiml.message("DOB asked");
+          req.action = {
+            verb: "upsert",
+            key: "dob",
+            phone: req.body.From,
+            data: req.body.Body.substring(4, req.body.Body.length)
+          };
+          next();
+          break;
+        case "HEIGHT":
+          twiml.message("Height added");
+          req.action = {
+            verb: "upsert",
+            key: "height",
+            phone: req.body.From,
+            data: req.body.Body.substring(6, req.body.Body.length)
+          };
+          next();
+          break;
+        case "VERIFY":
+          twiml.message("Verify called");
+          req.action = {
+            verb: "verify",
+            key: "verify",
+            phone: req.body.From,
+            data: req.body.Body.substring(6, req.body.Body.length)
+          };
+          next();
+          break;
+        case "PROFILE":
+          twiml.message("profile called");
+          req.action = {
+            key: "profile",
+            phone: req.body.From,
+            data: req.body.Body.substring(7, req.body.Body.length)
+          };
+          next();
+          break;
+        default:
+          twiml.message("default called");
+          req.action = {
+            key: "help",
+            phone: req.body.From,
+            data: req.body.Body
+          };
+          next();
+          break;
+      }
     }
   });
 };
