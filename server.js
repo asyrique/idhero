@@ -24,12 +24,14 @@ var express    = require('express'),        // call express
 var util = require("./models/util");
 
 // Setup Mongoose
+/*
 mongoose.connect(process.env.MONGOLAB_URI, function(err) {
        if (err) {
            console.log("DB error!");
             throw err;
         }
 });
+*/
 
 // Load Models
 var User = require('./models/users');
