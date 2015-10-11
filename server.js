@@ -13,7 +13,7 @@ var express    = require('express'),        // call express
     app        = express(),                 // define our app using express
     mongoose   = require('mongoose'),
     IDhero = require('./routes/auth'),
-    //users = require('./routes/users'),
+    users = require('./routes/users'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
     http = require('http'),
@@ -32,8 +32,7 @@ mongoose.connect(process.env.MONGOLAB_URI, function(err) {
 });
 
 // Load Models
-var User = require('./models/users'),
-    Data = require('./models/data');
+var User = require('./models/users');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
