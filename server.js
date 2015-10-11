@@ -50,6 +50,8 @@ router.get('/', function(req, res) {
 });
 
 router.post('/search', function(req, res) {
+
+        // Sending a example JSON/
         console.log(req.body.idSearch);
         res.json({
             phone:"+1 646 421 96 94",
