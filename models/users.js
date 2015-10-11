@@ -43,7 +43,6 @@ var schema = new mongoose.Schema(
     },
     fields: [{
       type: String,
-      default: "all"
     }],
     state: 0
   }]
