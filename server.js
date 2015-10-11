@@ -81,7 +81,7 @@ router.post('/', function(req, res) {
     textInput = parseBody(body);
     textInput = textInput.split();
 
-    if(textInput[0].toUpperString() == "REGISTER"){
+    if(textInput[0].toUpperCase() == "REGISTER"){
         console.log(textInput[0]);
     }
     twiml.message('Thanks, your message of "' + body + '" was received!');
