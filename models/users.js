@@ -10,13 +10,11 @@ var schema = new mongoose.Schema(
       type: Date,
       default: Date.now
   },
-  data: [{
-    key: String,
-    value: {
-      type: String,
-      default: null
-    }
-  }],
+  data: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  },
+  tier: Number,
   sponsors:
   [{
     user:
@@ -41,7 +39,6 @@ var schema = new mongoose.Schema(
       default: Date.now
     },
     fields: [String],
-    trusted: Boolean
   }]
 });
 
