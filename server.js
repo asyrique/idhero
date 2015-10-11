@@ -15,7 +15,7 @@ var express    = require('express'),        // call express
     mongoose   = require('mongoose'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
-    PlanBear = require('./routes/auth'),
+    Auth = require('./routes/auth'),
     users = require('./routes/users'),
     plans = require('./routes/plan'),
     smsauth = require('./routes/twilio'),
@@ -49,7 +49,7 @@ mongoose.connect(process.env.MONGOLAB_URI, function(err) {
 var router = express.Router();
 
 router.get('/', function(req, res) {
-    res.json({ message: 'APIv2' });
+    res.json({ message: 'APIv1' });
 });
 
 // SMS Auth

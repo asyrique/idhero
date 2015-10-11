@@ -2,12 +2,12 @@ mongoose = require('mongoose');
 
 var schema = new mongoose.Schema(
 {
-  username: {
+  phone: {
     type: String,
     unique: true
   },
-  passphrase: {
-    type: String,
+  pin: {
+    type: Number,
     select: false
   },
   joined:{
