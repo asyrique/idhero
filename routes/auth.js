@@ -68,13 +68,13 @@ exports.auth = function(req, res, next){
           next();
           break;
         case "VERIFY":
-          twiml.message("Verify called");
           req.action = {
             verb: "verify",
             key: "verify",
             phone: req.body.From,
             data: req.body.Body.substring(6, req.body.Body.length)
           };
+          twiml.message(util.texts.verifyS(data));
           next();
           break;
         case "PROFILE":
