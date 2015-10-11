@@ -11,8 +11,11 @@ var schema = new mongoose.Schema(
       default: Date.now
   },
   data: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Data'
+    key: String,
+    value: {
+      type: String,
+      default: null
+    }
   }],
   sponsors:
   [{
@@ -20,7 +23,25 @@ var schema = new mongoose.Schema(
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
+    },
+    date: {
+      type: Date,
+      default: Date.now
     }
+  }],
+  verifications:
+  [{
+    user:
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+    fields: [String],
+    trusted: Boolean
   }]
 });
 
