@@ -28,6 +28,8 @@ function verify(req, res){
   User.findOne({"phone":req.action.data}, function(err, user){
     if (err) {
       twiml.message("This phone number is not within our Web of Trust (tm). Please find a friend who's an ID Hero to verify you."); // stretch suggest phone numbers
+      res.writeHead(200, {'Content-Type': 'text/xml'});
+      res.end(twiml.toString());
     }
     else {
       req.user.verifications.push({user: user._id, fields: ["all"], state:0});

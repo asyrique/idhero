@@ -10,6 +10,7 @@ exports.auth = function(req, res, next){
 
   User.findOne({"phone":req.body.From}, function(err, user){
     if (user === null && req.body.Body.toUpperCase() == "REGISTER"){
+      console.log("here!");
       user = new User();
       req.action = {
         verb: "register",
