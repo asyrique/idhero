@@ -67,7 +67,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
      var body = "";
-     var cleanBody = "";
+     var textInput;
 
   req.on('data', function(data) {
     body += data;
@@ -76,7 +76,7 @@ router.post('/', function(req, res) {
   req.on('end', function() {
     //Create TwiML response
     var twiml = new twilio.TwimlResponse();
-    parseBody(body);
+    textInput = parseBody(body);
     //twiml.message('Thanks, your message of "' + body + '" was received!');
 
    res.writeHead(200, {'Content-Type': 'text/xml'});
