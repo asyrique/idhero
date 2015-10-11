@@ -83,7 +83,7 @@ router.post('/', function(req, res) {
         //data.data = textInput[1];
         //console.log(data.data);
         } else {
-            twiml.message("Thank you, your account has been created. Your ID is your phone number.");
+            twiml.message("Please do not any other keywords next to REGISTER");
         }
 
 
