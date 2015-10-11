@@ -6,7 +6,6 @@ var util = require("../models/util");
 
 exports.auth = function(req, res, next){
   res.header('Content-Type', 'text/xml');
-  var twiml = new twilio.TwimlResponse();
 
   User.findOne({"phone":req.body.From}, function(err, user){
     if (user === null && req.body.Body.toUpperCase() == "REGISTER"){
@@ -22,12 +21,14 @@ exports.auth = function(req, res, next){
       next();
     }
     else if(user === null){
+      var twiml = new twilio.TwimlResponse();
       console.log("User does not exist");
       twiml.message("You've reached IDHero, one ID to rule them all. We see you don't have an account. Type REGISTER to join the revolution now.");
       res.writeHead(200, {'Content-Type': 'text/xml'});
       res.end(twiml.toString());
     }
     else{
+      var twiml = new twilio.TwimlResponse();
       req.user = user;
       req.action = {};
       console.log(req.body.Body.split(' ')[0].toUpperCase());
@@ -49,7 +50,6 @@ exports.auth = function(req, res, next){
           next();
           break;
         case "DOB":
-          twiml.message("DOB asked");
           req.action = {
             verb: "upsert",
             key: "dob",
@@ -59,12 +59,11 @@ exports.auth = function(req, res, next){
           next();
           break;
         case "HEIGHT":
-          twiml.message("Height added");
           req.action = {
             verb: "upsert",
             key: "height",
             phone: req.body.From,
-            data: req.body.Body.substring(6, req.body.Body.length)
+            data: req.body.Body.substring(7, req.body.Body.length)
           };
           next();
           break;
@@ -73,17 +72,25 @@ exports.auth = function(req, res, next){
             verb: "verify",
             key: "verify",
             phone: req.body.From,
-            data: req.body.Body.substring(6, req.body.Body.length)
+            data: req.body.Body.substring(7, req.body.Body.length)
           };
-          twiml.message(util.texts.verifyS(data));
+          twiml.message(util.texts.verifyS(req.action.data));
           next();
           break;
         case "PROFILE":
-          twiml.message("profile called");
           req.action = {
             key: "profile",
             phone: req.body.From,
-            data: req.body.Body.substring(7, req.body.Body.length)
+            data: req.body.Body.substring(8, req.body.Body.length)
+          };
+          next();
+          break;
+        case "CONFIRM":
+          req.action = {
+            verb: "confirm",
+            key: "confirm",
+            phone: req.body.From,
+            data: req.body.Body.substring(8, req.body.Body.length)
           };
           next();
           break;
