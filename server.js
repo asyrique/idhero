@@ -11,46 +11,36 @@ try {
 // call the packages we need
 var express    = require('express'),        // call express
     app        = express(),                 // define our app using express
-    //mongoose   = require('mongoose'),
-    //bodyParser = require('body-parser'),
-    //cors       = require('cors'),
-    //PlanBear = require('./routes/auth'),
+    mongoose   = require('mongoose'),
+    IDhero = require('./routes/auth'),
     //users = require('./routes/users'),
-    //plans = require('./routes/plan'),
-    //smsauth = require('./routes/twilio'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
-    //qs = require('querystring'),
     http = require('http'),
     twilio = require('twilio');
     var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
-
-/*
-twilio.messages.create({
-    to: "+1 646 421 96 94",
-    from: "+15852964537",
-    body: "TEST",
-}, function(err, message) {
-    console.log(message.sid);
-});
-*/
-
 // UTILITIES
 // Load Mongo URI from .env for local development
 
+// Setup Mongoose
+mongoose.connect(process.env.MONGOLAB_URI, function(err) {
+        if (err) {
+            console.log("DB error!");
+            throw err;
+        }
+});
+
 // Load Models
-//var User = require('./models/user'),
-    //Plan = require('./models/plan'),
-    //SMSAuth = require('./models/sms-auth');
+var User = require('./models/users'),
+    Data = require('./models/data');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-/*
+
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb'}));
 app.use(bodyParser.json());
 app.use(cors());
-*/
 
 
 function isNumeric(n) {
@@ -67,13 +57,10 @@ router.get('/', function(req, res) {
     res.json({ message: 'APIv1' });
 });
 
-
-
-
-
 router.post('/', function(req, res) {
+    console.log(req.body);
      var body = "";
-     var textInput = "";
+     var textInput;
 
   req.on('data', function(data) {
     body += data;
@@ -82,16 +69,19 @@ router.post('/', function(req, res) {
   req.on('end', function() {
     //Create TwiML response
     var twiml = new twilio.TwimlResponse();
-    
     textInput = parseBody(body);
     textInput = textInput.split(' ');
+
+    var name = "NotAvailable";
+    var dob = "NotAvailable";
+    var height = "NotAvailable";
     
 
     if(textInput[0].toUpperCase() == "HERO"){
         console.log("HELP code executed");
         twiml.message('REGISTER to create your account. NAME <FirstNameLastName> to add your name.');
         twiml.message('DOB <Month-Day-Year> to add your date of birth. HEIGHT <#height> to add your height.');
-        twiml.message('VERIFY <#PhoneNumber> to ask for the phonenumber owner to verify you.');
+        twiml.message('VERIFY <#PhoneNumber> to ask for the phonenumber owner to verify you. PROFILE to see your stored info.');
 
     } else if(textInput[0].toUpperCase() == "REGISTER"){
         if (textInput.length == 1) {
@@ -108,7 +98,8 @@ router.post('/', function(req, res) {
         //twiml.message('Thanks, your message of "' + body + '" was received!');
     } else if(textInput[0].toUpperCase() == "NAME"){
         if (textInput.length > 1) {
-        twiml.message("Your name is recorded as " + textInput.splice(1, textInput.length).join(' ') + ". This field is awaiting for verification.");
+        twiml.message("Your name is recorded as " + textInput.splice(1, textInput.length).join(' ') + ". You are still awaiting for verification.");
+        name = textInput.splice(1, textInput.length).join(' ');
         //var data = new Data();
         //data.key = "name";
         //data.data = textInput[1];
@@ -119,7 +110,8 @@ router.post('/', function(req, res) {
 
     } else if(textInput[0].toUpperCase() == "DOB"){
         if (textInput.length == 2 && textInput[1][2] == '-' && isNumeric(textInput[1][0]))  {
-        twiml.message("Your date of birth is recorded as " + textInput[1] + ". This field is awaiting for verification.");
+        twiml.message("Your date of birth is recorded as " + textInput[1] + ". You are still awaiting for verification.");
+        dob = textInput[1];
         //var data = new Data();
         //data.key = "name";
         //data.data = textInput[1];
@@ -129,7 +121,8 @@ router.post('/', function(req, res) {
         }
     } else if(textInput[0].toUpperCase() == "HEIGHT"){
         if (textInput.length == 2 && isNumeric(textInput[1][0])) {
-        twiml.message("Your height is recorded as " + textInput[1] + ". This field is awaiting for verification.");
+        twiml.message("Your height is recorded as " + textInput[1] + ". You are still awaiting for verification.");
+        height = textInput[1];
         //var data = new Data();
         //data.key = "name";
         //data.data = textInput[1];
@@ -147,8 +140,16 @@ router.post('/', function(req, res) {
         } else {
             twiml.message('Please enter in the correct format: VERIFY "#PhoneNumber" (without the quotes in number format)');
         }
-    } else {
-    twiml.message('Input not valid. Please enter HERO to get a list of valid commands.');
+    } else if(textInput[0].toUpperCase() == "PROFILE"){
+        if (textInput.length == 1 ) {
+        twiml.message("Here is your PROFILE: Name: " +name + ". Date Of Birth: " + dob + ". Height: " + height + ".");
+        //var data = new Data();
+        //data.key = "name";
+        //data.data = textInput[1];
+        //console.log(data.data);
+        }
+    }  else {
+        twiml.message('Input not valid. Please enter HERO to get a list of valid commands.');
     }
     //twiml.message('Thanks, your message of "' + body + '" was received!');
 
@@ -178,15 +179,13 @@ function parseBody(textClump){
     }
     body = text.slice(indexStart,indexEnd);
     cleanBody = body.split('+').join(' ');
-    return(cleanBody);
+    console.log(cleanBody);
 }
 
 // START THE SERVER
 app.use("/",router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
-
 
 
 
@@ -217,15 +216,6 @@ twilioClient.sendMessage({
 // SMS Auth
 router.post('/verify', smsauth.getcode);
 router.get('/verify/:id/:code', smsauth.verify);
-
-
-// Setup Mongoose
-mongoose.connect(process.env.MONGOLAB_URI, function(err) {
-        if (err) {
-            console.log("DB error!");
-            throw err;
-        }
-});
 
 //Users
 router.post('/users', users.create);

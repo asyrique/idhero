@@ -1,4 +1,4 @@
-var User = require('../models/user');
+var User = require('../models/users');
 
 
 exports.auth = function(req, res, next){
