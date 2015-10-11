@@ -21,14 +21,11 @@
   },
   "homepage": "https://github.com/asyrique/idhero#readme",
   "dependencies": {
-<<<<<<< HEAD
     "body-parser": "^1.14.1",
     "cors": "^2.7.1",
     "dotenv": "^1.2.0",
     "express": "^4.13.3",
     "mongoose": "^4.1.10",
-=======
->>>>>>> ccab109c7455f6a82f00e02364c3b26767cc4219
     "twilio": "^2.5.1"
   }
 }
