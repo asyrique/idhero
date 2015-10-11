@@ -11,46 +11,36 @@ try {
 // call the packages we need
 var express    = require('express'),        // call express
     app        = express(),                 // define our app using express
-    //mongoose   = require('mongoose'),
-    //bodyParser = require('body-parser'),
-    //cors       = require('cors'),
-    //PlanBear = require('./routes/auth'),
-    //users = require('./routes/users'),
-    //plans = require('./routes/plan'),
-    //smsauth = require('./routes/twilio'),
+    mongoose   = require('mongoose'),
+    IDhero = require('./routes/auth'),
+    users = require('./routes/users'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
-    qs = require('querystring'),
     http = require('http'),
     twilio = require('twilio');
     var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
-
-/*
-twilio.messages.create({
-    to: "+1 646 421 96 94",
-    from: "+15852964537",
-    body: "TEST",
-}, function(err, message) {
-    console.log(message.sid);
-});
-*/
-
 // UTILITIES
 // Load Mongo URI from .env for local development
 
+// Setup Mongoose
+mongoose.connect(process.env.MONGOLAB_URI, function(err) {
+        if (err) {
+            console.log("DB error!");
+            throw err;
+        }
+});
+
 // Load Models
-//var User = require('./models/user'),
-    //Plan = require('./models/plan'),
-    //SMSAuth = require('./models/sms-auth');
+var User = require('./models/user'),
+    Data = require('./models/data');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
-/*
+
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb'}));
 app.use(bodyParser.json());
 app.use(cors());
-*/
 
 var port = process.env.PORT || 8080;        // set our port
 
@@ -62,11 +52,8 @@ router.get('/', function(req, res) {
     res.json({ message: 'APIv1' });
 });
 
-
-
-
-
 router.post('/', function(req, res) {
+    console.log(req.body);
      var body = "";
      var textInput;
 
@@ -145,15 +132,6 @@ twilioClient.sendMessage({
 // SMS Auth
 router.post('/verify', smsauth.getcode);
 router.get('/verify/:id/:code', smsauth.verify);
-
-
-// Setup Mongoose
-mongoose.connect(process.env.MONGOLAB_URI, function(err) {
-        if (err) {
-            console.log("DB error!");
-            throw err;
-        }
-});
 
 //Users
 router.post('/users', users.create);
