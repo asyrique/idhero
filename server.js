@@ -21,7 +21,7 @@ var express    = require('express'),        // call express
     var twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // UTILITIES
-// Load Mongo URI from .env for local development
+var util = require("./models/util");
 
 // Setup Mongoose
 mongoose.connect(process.env.MONGOLAB_URI, function(err) {
@@ -41,14 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '50mb'}));
 app.use(bodyParser.json());
 app.use(cors());
 
-
-function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
 var port = process.env.PORT || 8080;        // set our port
-
-
 
 var router = express.Router();
 
@@ -108,7 +101,7 @@ router.post('/', function(req, res) {
         }
 
     } else if(textInput[0].toUpperCase() == "DOB"){
-        if (textInput.length == 2 && textInput[1][2] == '-' && isNumeric(textInput[1][0]))  {
+        if (textInput.length == 2 && textInput[1][2] == '-' && util.isNumeric(textInput[1][0]))  {
         twiml.message("Your date of birth is recorded as " + textInput[1] + ". You are still awaiting for verification.");
         dob = textInput[1];
         //var data = new Data();
@@ -119,7 +112,7 @@ router.post('/', function(req, res) {
             twiml.message('Please enter your Date Of Birth in the correct format: DOB "MM-DD-YY" (without the quotes)');
         }
     } else if(textInput[0].toUpperCase() == "HEIGHT"){
-        if (textInput.length == 2 && isNumeric(textInput[1][0])) {
+        if (textInput.length == 2 && util.isNumeric(textInput[1][0])) {
         twiml.message("Your height is recorded as " + textInput[1] + ". You are still awaiting for verification.");
         height = textInput[1];
         //var data = new Data();
@@ -130,7 +123,7 @@ router.post('/', function(req, res) {
             twiml.message('Please enter your HEIGHT in the correct format: HEIGHT "#height" (without the quotes in number format)');
         }
     } else if(textInput[0].toUpperCase() == "VERIFY"){
-        if (textInput.length == 2 && isNumeric(textInput[1][0])) {
+        if (textInput.length == 2 && util.isNumeric(textInput[1][0])) {
         twiml.message("You have asked for verification from this number" + textInput[1] + ". Wait for verification.");
         //var data = new Data();
         //data.key = "name";
@@ -157,29 +150,29 @@ router.post('/', function(req, res) {
    });
 });
 
-function parseBody(textClump){
-    var text = textClump;
-    var body = "";
-    var indexStart = 0;
-    var indexEnd = 0;
-
-    for (var i = 0; i  <= text.length - 6; i++) {
-        if(text.slice(i, i+5) == "&Body"){
-            indexStart = i + 6;
-            break;
-        }
-
-    }
-    for ( i = indexStart; i < text.length; i++) {
-        if (text[i] == '&'){
-            indexEnd = i;
-            break;
-        }
-    }
-    body = text.slice(indexStart,indexEnd);
-    cleanBody = body.split('+').join(' ');
-    console.log(cleanBody);
-}
+// function parseBody(textClump){
+//     var text = textClump;
+//     var body = "";
+//     var indexStart = 0;
+//     var indexEnd = 0;
+//
+//     for (var i = 0; i  <= text.length - 6; i++) {
+//         if(text.slice(i, i+5) == "&Body"){
+//             indexStart = i + 6;
+//             break;
+//         }
+//
+//     }
+//     for ( i = indexStart; i < text.length; i++) {
+//         if (text[i] == '&'){
+//             indexEnd = i;
+//             break;
+//         }
+//     }
+//     body = text.slice(indexStart,indexEnd);
+//     cleanBody = body.split('+').join(' ');
+//     console.log(cleanBody);
+// }
 
 // START THE SERVER
 app.use("/",router);
