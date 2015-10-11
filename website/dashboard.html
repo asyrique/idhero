@@ -21,16 +21,39 @@
       
       <center>
       <img src="images/birdy.png" alt="birdy">
-      <form action="POST">
+      <form id="getDATA" >
           
           <div class="search-bar">
 
-            <input type="text" placeholder="Enter Phone Number ### ### ## ##" name = "idSearch"> 
+
+            <input  type="text" style= 'float:none' id = "valueHolder" placeholder="Enter Phone Number ### ### ## ##" name = "idSearch">
+            <input style = "margin: 10px 10px 10px 10px; width : 535px; height: 29px;" type="password" id = "passwordHolder" placeholder="Enter 4 Digit PIN CODE" name = "idSearch"> 
+
           </div>
 
           <div class="cf"></div>
+            <br>  <br>
         
-        <input class="search" type="submit" id="getDATA" value="GET INFO">
+        <input class="search" id ="submitButton" type="submit" value="GET INFO">
+    <br>  <br>
+         <table style="width:30%;  border: 1px solid black;">
+          <tr>
+            <td>Phone Number</td>
+            <td id ="phoneNumber">-</td> 
+          </tr>
+          <tr>
+            <td>Name</td>
+            <td id ="name">-</td> 
+          </tr>
+          <tr>
+            <td>Date of Birth</td>
+            <td id ="dob">-</td> 
+          </tr>
+          <tr>
+            <td>Height</td>
+            <td id ="height">-</td> 
+          </tr>
+        </table>
 
       
       </form>

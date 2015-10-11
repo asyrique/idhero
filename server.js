@@ -25,8 +25,8 @@ var util = require("./models/util");
 
 // Setup Mongoose
 mongoose.connect(process.env.MONGOLAB_URI, function(err) {
-        if (err) {
-            console.log("DB error!");
+       if (err) {
+           console.log("DB error!");
             throw err;
         }
 });
@@ -49,8 +49,18 @@ router.get('/', function(req, res) {
     res.json({ message: 'APIv1' });
 });
 
+router.post('/search', function(req, res) {
+        console.log(req.body.idSearch);
+        res.json({
+            phone:"+1 646 421 96 94",
+            name: 'Batu Aytemiz',
+            dob: "05-31-95",
+            height: "172"
+        });
+    });
+
+
 router.post('/', function(req, res) {
-    console.log(req.body);
      var body = "";
      var textInput;
 
@@ -149,6 +159,7 @@ router.post('/', function(req, res) {
    res.end(twiml.toString());
    });
 });
+
 
 // function parseBody(textClump){
 //     var text = textClump;
