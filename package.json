@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/asyrique/idhero/issues"
   },
-  "homepage": "https://github.com/asyrique/idhero#readme"
+  "homepage": "https://github.com/asyrique/idhero#readme",
+  "dependencies": {
+    "twilio": "^2.5.1"
+  }
 }
