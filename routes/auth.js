@@ -6,7 +6,7 @@ exports.auth = function(req, res, next){
 
   var body = request.param('Body').trim();
   var from = req.param('From');
-  User.findOne({"phone":from}), function(err, user){
+  User.findOne({"phone":from}, function(err, user){
     if (err && body == "REGISTER"){
       req.user = new User();
 
@@ -14,13 +14,8 @@ exports.auth = function(req, res, next){
 
       next();
     }
+    else{
+      req.user = user;
+    }
   });
-    if (req.headers.token) {
-        User.findOne({"token": req.headers.token}, function(err, user){
-            if (err) return res.status(403).json({"message":"Fucked up token"});
-
-            req.user = user;
-
-            next();
-        });
 };

@@ -6,3 +6,5 @@ var schema = new mongoose.Schema(
     data: [Schema.Types.Mixed]
   }, {strict:false}
 );
+
+module.exports = mongoose.model('Data', schema);
