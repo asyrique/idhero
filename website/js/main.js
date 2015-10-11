@@ -16,10 +16,12 @@ $( document ).ready(function() {
                data: $("#valueHolder").serialize(), // serializes the form's elements.
                success: function(data){
                     console.log(data);
+
                    $("#phoneNumber").html(data.phone);
                    $("#name").html(data.name);
                    $("#dob").html(data.dob);
                    $("#height").html(data.height);
+                   $(".tableClass").fadeTo( "slow", 1 );
                }
              });
         return false; // avoid to execute the actual submit of the form.
