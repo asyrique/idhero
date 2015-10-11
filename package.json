@@ -1,0 +1,26 @@
+{
+  "name": "idhero",
+  "version": "0.0.6",
+  "description": "One ID to rule them all",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asyrique/idhero.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asyrique/idhero/issues"
+  },
+  "homepage": "https://github.com/asyrique/idhero#readme",
+  "dependencies": {
+    "twilio": "^2.5.1"
+  }
+}
