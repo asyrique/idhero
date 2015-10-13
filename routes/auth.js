@@ -95,12 +95,16 @@ exports.auth = function(req, res, next){
           next();
           break;
         default:
-          twiml.message("default called");
+          twiml = new twilio.TwimlResponse();
+
           req.action = {
             key: "help",
             phone: req.body.From,
             data: req.body.Body
           };
+          twiml.message("You've reached IDHero, one ID to rule them all. We see you don't have an account. Type REGISTER to join the revolution now.");
+          res.writeHead(200, {'Content-Type': 'text/xml'});
+          res.end(twiml.toString());
           next();
           break;
       }

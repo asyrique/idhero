@@ -40,7 +40,7 @@ function verify(req, res){
   console.log("Called verify with" + req.action.data);
   Users.findOne({"phone":req.action.data}, function(err, user){
     console.log(req.action.data);
-    if (err) {
+    if (user === "null") {
       var twiml = new twilio.TwimlResponse();
       twiml.message("This phone number is not within our Web of Trust (tm). Please find a friend who's an ID Hero to verify you."); // stretch suggest phone numbers
       res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -106,6 +106,31 @@ function confirm(req, res){
     }
   });
 }
+
+function profile(req,res){
+  var unique_code = Math.random().toString(36).substring(7);
+  if (req.action.data !== ""){
+    client.sendMessage({
+      to: req.action.data,
+      from: "+15517774376",
+      body: req.user.phone + " has just granted you access to their profile.\n This transaction's unique IDHero code to verify is " + unique_code
+    }, function(err, responseData){
+      if (err) console.log(err);
+    });
+  }
+
+  var twiml = new twilio.TwimlResponse();
+  twiml.message("Here's your current profile in our system: " +
+  "\nName: " + (req.user.data.name || "N/A" ) + "\n" +
+  "D.O.B: " + (req.user.data.dob || "N/A" ) + "\n" +
+  "Height: " + (req.user.data.height || "N/A") + "\n" +
+  "Verified by " + (req.user.verifications.length) + " people\n" +
+  "IDHero verification code: " + unique_code);
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
+}
+
+
 exports.process = function(req, res){
   var twiml = new twilio.TwimlResponse();
   if (req.action.key == "register"){
@@ -128,8 +153,7 @@ exports.process = function(req, res){
   if (req.action.verb == "confirm"){
     confirm(req,res);
   }
-};
-
-exports.getProfile = function(req, res){
-
+  if (req.action.key == "profile"){
+    profile(req,res);
+  }
 };
