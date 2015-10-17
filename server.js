@@ -12,8 +12,8 @@ try {
 var express    = require('express'),        // call express
     app        = express(),                 // define our app using express
     mongoose   = require('mongoose'),
-    IDhero = require('./routes/auth'),
-    users = require('./routes/users'),
+    commandParse = require('./routes/parse'),
+    interface = require('./routes/interface'),
     bodyParser = require('body-parser'),
     cors       = require('cors'),
     http = require('http'),
@@ -50,13 +50,14 @@ router.get('/', function(req, res) {
     res.json({ message: 'APIv1' });
 });
 
-router.post('/', IDhero.auth, users.process);
+router.post('/', commandParse.auth, interface.process);
 
+// For web UI implmentation
 router.post('/search', function(req, res) {
 
 });
 
 // START THE SERVER
-app.use("/",router);
+app.use("/", router);
 app.listen(port);
 console.log('Magic happens on port ' + port);

@@ -95,7 +95,7 @@ function confirm(req, res){
             else {
               client.sendMessage({
                 to: req.action.data,
-                from: "+15517774376",
+                from: process.env.TWILIO_NUMBER,
                 body: req.user.phone + " has just verified you. Yay!"
               }, function(err, responseData){
                 if (err) console.log(err);
